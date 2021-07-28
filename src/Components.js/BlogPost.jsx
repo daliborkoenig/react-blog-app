@@ -8,7 +8,7 @@ function BlogPost(props) {
 
   return (
     <div className="BlogPost">
-      <img src={`https://picsum.photos/00/200`} alt="randomImage" />
+      <img src={`https://picsum.photos/800/800`} alt="randomImage" />
       <h1>{props.article.title}</h1>
       <p>{props.article.content}</p>
       <p>Author: {props.article.username}</p>

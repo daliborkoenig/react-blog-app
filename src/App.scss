@@ -145,6 +145,9 @@ a{
       word-wrap: break-word;
       &>img{
         margin-bottom: 2rem;
+        height: 300px;
+        object-fit: cover;
+        object-position: center;
       }
       &>h1{
         padding-bottom: 2rem;
