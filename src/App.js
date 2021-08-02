@@ -3,40 +3,58 @@ import { BrowserRouter , Route , Switch , Redirect } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss'
 import Navi from './Components.js/Navi';
-import Home from './Components.js/Home';
-import CreatePost from './Components.js/CreatePost';
-import ViewPosts from './Components.js/ViewPosts';
-import BlogPost from './Components.js/BlogPost';
-import Trianglify from 'react-trianglify'
+import Login from './Components.js/Login';
+import Workshops from './Components.js/Workshops';
+import ShopInfo from './Components.js/ShopInfo';
+import Footer from './Components.js/Footer';
 
 function App() {
-  const [posts, setPost] = useState([])
-  const [article, setArticle] = useState()
-  const getPost = (post) => {
-    console.log(post);
-    setPost(posts => [...posts, post]);
+  const [auth, setAuth] = useState(false);
+  const [user, setUser] = useState();
+  const [basket, setBasket] = useState([]);
+  const [showCheckOut, setShowCheckout] = useState(false);
+  const [workshop, setWorkshop] = useState(false);
+  const checkAuth = (auth) => {
+    if (auth) {
+      setAuth(true);
+    }
+    else {
+      setAuth(false);
+    }
   }
-  const getArticle = (item) => {
-    console.log(item);
-    setArticle(item);
+  const addToBasket = (e) => {
+    setBasket(basket => [...basket, Number(e)])
   }
+
+  const removeFromBasket = (arr) => {
+    setBasket(arr)
+  }
+  const clearBasket = () => {
+    setBasket([])
+  }
+
+  const setUserName = (user) => {
+    let name = user.split(' ');
+    setUser(name[0]);
+  } 
+  const showModal = () => {
+    setShowCheckout(!showCheckOut);
+  }
+  const getWorkshop = (item) => {
+    setWorkshop(item);
+  }
+  console.log(basket);
   return (
-    <div className="App h-100 w-100">
-      <Trianglify
-        width={window.innerWidth}
-        height={window.innerHeight}
-        cellSize={50}
-        output="svg"
-      />
-     <BrowserRouter>
-        <Navi/>
+    <div className="App">
+      <BrowserRouter>
+        {auth && <Navi basket={basket} removeFromBasket={removeFromBasket} user={user} showModal={showModal}/>}
         <Switch>
-          <Route exact path="/home"><Home posts={posts}/></Route>
-          <Route exact path="/create-post"><CreatePost getPost={getPost}/></Route>
-          <Route exact path="/view-posts"><ViewPosts getArticle={getArticle} posts={posts} article={article}/></Route>
-          <Route exact path="/view-posts/:postName"><BlogPost article={article}/></Route>
-          <Route render={() => <Redirect to={{pathname: "/home"}} />} />
+          <Route exact path="/login"><Login checkAuth={checkAuth} auth={auth} setUserName={setUserName}/></Route>
+          <Route exact path="/workshops" component={()=><Workshops auth={auth} clearBasket={clearBasket} addToBasket={addToBasket} showCheckOut={showCheckOut} showModal={showModal} getWorkshop={getWorkshop}/>}/>
+          <Route exact path="/workshops/:postName"><ShopInfo workshop={workshop} addToBasket={addToBasket}/></Route>
+          <Route render={() => <Redirect to={{pathname: "/workshops"}} />} />
         </Switch>
+        <Footer/>
       </BrowserRouter>
     </div>
   );
